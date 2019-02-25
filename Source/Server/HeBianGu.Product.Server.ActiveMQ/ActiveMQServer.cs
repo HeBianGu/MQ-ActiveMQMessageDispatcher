@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace HeBianGu.Product.Server.ActiveMQ
 {
+    /// <summary>
+    /// 发送消息服务类
+    /// </summary>
     class ActiveMQServer
     {
         private IConnectionFactory factory;
@@ -17,7 +20,7 @@ namespace HeBianGu.Product.Server.ActiveMQ
 
         bool _flag;
 
-        public void Init(string user, string pw, string brokerUri = "tcp://192.168.1.11:61616")
+        public void Init(string user, string pw, string brokerUri)
         {
             _userName = user;
             _passWord = pw;
@@ -39,7 +42,7 @@ namespace HeBianGu.Product.Server.ActiveMQ
             }
         }
 
-        public void SendMessage(string ms)
+        public void SendMessage(string ms,string group)
         {
             if (!_flag) return;
 
@@ -53,15 +56,14 @@ namespace HeBianGu.Product.Server.ActiveMQ
                     IMessageProducer prod = session.CreateProducer(new Apache.NMS.ActiveMQ.Commands.ActiveMQQueue("firstQueue"));
                     //创建一个发送消息的对象
                     ITextMessage message = prod.CreateTextMessage();
-                    //XmlDocument Doc = new XmlDocument();
-                    //Doc.LoadXml("<?xml version='1.0' encoding='UTF-8'?><flightroute><flight><flightinfo><acid>CCA1501</acid><runway>13L</runway><gate>N115</gate><cockpitdirection>180</cockpitdirection><deparr>DEP</deparr></flightinfo></flight</flightroute>");
-                    message.Text = ms; //给这个消息对象赋实际的消息
+                    //给这个消息对象赋实际的消息
+                    message.Text = ms; 
+
                     //设置消息对象的属性，是Queue的过滤条件也是P2P的唯一指定属性
-                    message.Properties.SetString("filter", "demo");
+                    message.Properties.SetString("filter", group);
+
                     prod.Send(message, MsgDeliveryMode.NonPersistent, MsgPriority.Normal, TimeSpan.MinValue);
                     message.Text += "发送成功" + Environment.NewLine;
-                    //Text.Text = "";
-                    //Text.Focus();
                 }
             }
         }

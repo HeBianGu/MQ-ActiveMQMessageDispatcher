@@ -11,5 +11,8 @@ namespace HeBianGu.Product.Base.Interface
     public interface IRegisterMessage
     {
         void Notice(string message);
+
     }
+
+
 }

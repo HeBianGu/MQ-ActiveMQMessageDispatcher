@@ -8,6 +8,7 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace HeBianGu.Product.App.WindowServiceHost
 {
@@ -24,25 +25,37 @@ namespace HeBianGu.Product.App.WindowServiceHost
 
             ServerManager.Instance.LogInfo("Window服务准备启动！");
 
-            ServerManager.Instance.LogInfo("准备开始启动客户端");
+            int count = 0;
 
-            try
+            while (true)
             {
-                ServerManager.Instance.StartClient();
+                try
+                {
+                    count++;
 
-                ServerManager.Instance.LogInfo("启动客户端完成");
+                    ServerManager.Instance.LogInfo($"准备开始启动客户端:尝试{count}次");
 
-                ServerManager.Instance.LogInfo("Window服务启动完成！");
+                    ServerManager.Instance.StartClient();
 
+                    ServerManager.Instance.LogInfo("启动客户端完成");
+
+                    ServerManager.Instance.LogInfo("Window服务启动完成！");
+
+                    break;
+
+                }
+                catch (Exception ex)
+                {
+                    ServerManager.Instance.LogInfo("启动客户端错误");
+
+                    ServerManager.Instance.LogError(ex);
+
+                    ServerManager.Instance.LogInfo("一分钟后进行自动重连");
+
+                    Thread.Sleep(60 * 1000);
+                }
             }
-            catch (Exception ex)
-            {
-                ServerManager.Instance.LogInfo("启动客户端错误");
 
-                ServerManager.Instance.LogError(ex);
-            }
-
-            
         }
 
         protected override void OnStop()

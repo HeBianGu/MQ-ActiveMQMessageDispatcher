@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,8 +33,11 @@ namespace HeBianGu.Product.Server.ActiveMQ
 
         public string GetBrokerUri()
         {
-            return "tcp://192.168.1.11:61616";
+            //return "tcp://127.0.0.1:61616";
+
+            return "tcp://116.62.176.33:61616";
         }
+
 
         public string GetUser()
         {

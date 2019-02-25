@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace HeBianGu.Product.Server.ActiveMQ
 {
+    /// <summary>
+    /// ActiveMQ注册接收总服务
+    /// </summary>
     public class ActiveMQService
     {
         #region - 客户端 -
@@ -17,9 +20,9 @@ namespace HeBianGu.Product.Server.ActiveMQ
         List<IRegisterMessage> _registerMessages = new List<IRegisterMessage>();
 
         /// <summary> 启动客户端 </summary>
-        public void StartClient()
-        {
-            _activeMQClient.Init(ActiveMQDomain.Instance.GetBrokerUri());
+        public void StartClient(string mac)
+        {  
+            _activeMQClient.Init(mac,ActiveMQDomain.Instance.GetBrokerUri());
 
             _activeMQClient.BeginMessage += l =>
             {
@@ -32,11 +35,21 @@ namespace HeBianGu.Product.Server.ActiveMQ
         }
 
         /// <summary> 注册订阅消息 </summary>
-        public void Register<T>() where T : IRegisterMessage
+        public ActiveMQService Register<T>() where T : IRegisterMessage
         {
             T t = Activator.CreateInstance<T>();
 
             _registerMessages.Add(t);
+
+            return this;
+        }
+
+        /// <summary> 清理注册的事假 </summary>
+        public ActiveMQService Clear()
+        {
+            _registerMessages.Clear();
+
+            return this;
         }
 
         #endregion
@@ -58,7 +71,9 @@ namespace HeBianGu.Product.Server.ActiveMQ
         /// <summary> 发送消息 </summary>
         public void SendMessage(string message)
         {
-            _activeMQServer.SendMessage(message);
+            _activeMQServer.SendMessage(message, "D0-03-4B-CC-FB-7F");
+
+            _activeMQServer.SendMessage(message, "E4-3A-6E-21-14-D0");
         }
 
         #endregion

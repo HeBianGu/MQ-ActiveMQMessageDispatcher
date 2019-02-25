@@ -42,6 +42,7 @@
             this.serviceInstaller1.Description = "ActiveMQ消息分发器";
             this.serviceInstaller1.DisplayName = "ActiveMQ消息分发器";
             this.serviceInstaller1.ServiceName = "ActiveMQMessageService";
+            this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller
             // 
